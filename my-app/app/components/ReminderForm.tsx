@@ -3,24 +3,52 @@
 import { useState, useRef } from 'react';
 import { useReminders } from '../contexts/ReminderContext';
 
-const DAYS = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
+interface FormData {
+  date: string;
+  time: string;
+  note: string;
+  repeat: boolean;
+  repeatDays: boolean[];
+  attachments: File[];
+}
 
-const initialFormState = {
+const initialFormState: FormData = {
   date: '',
   time: '',
   note: '',
-  attachment: null as File | null,
   repeat: false,
-  repeatDays: new Array(7).fill(false)
+  repeatDays: Array(7).fill(false),
+  attachments: []
 };
 
-export default function SummaryForm() {
-  const [formData, setFormData] = useState(initialFormState);
+const DAYS = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
+
+const formatDate = (date: string) => {
+  if (!date) return '';
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+};
+
+const formatTime = (time: string) => {
+  if (!time) return '';
+  const [hours, minutes] = time.split(':');
+  const hour = parseInt(hours);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${minutes} ${ampm}`;
+};
+
+export default function ReminderForm() {
+  const [formData, setFormData] = useState<FormData>(initialFormState);
   const dateInputRef = useRef<HTMLInputElement>(null);
   const timeInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { addReminder } = useReminders();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.date || !formData.time) {
@@ -28,54 +56,52 @@ export default function SummaryForm() {
       return;
     }
 
-    const reminder = {
+    await addReminder({
       date: formData.date,
       time: formData.time,
       note: formData.note,
       repeat: formData.repeat,
       repeatDays: formData.repeat ? formData.repeatDays : undefined,
-    };
+      attachments: formData.attachments.length > 0 ? formData.attachments : undefined
+    });
 
-    addReminder(reminder);
     setFormData(initialFormState);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, attachment: e.target.files[0] });
+    const files = Array.from(e.target.files || []);
+    if (formData.attachments.length + files.length > 2) {
+      alert('Maximum 2 attachments allowed');
+      return;
     }
+    setFormData(prev => ({
+      ...prev,
+      attachments: [...prev.attachments, ...files].slice(0, 2)
+    }));
+  };
+
+  const removeAttachment = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      attachments: prev.attachments.filter((_, i) => i !== index)
+    }));
   };
 
   const toggleDay = (index: number) => {
     const newRepeatDays = [...formData.repeatDays];
     newRepeatDays[index] = !newRepeatDays[index];
-    setFormData({ ...formData, repeatDays: newRepeatDays });
-  };
-
-  const formatDate = (date: string) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
-
-  const formatTime = (time: string) => {
-    if (!time) return '';
-    const [hours, minutes] = time.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const hour12 = hour % 12 || 12;
-    return `${hour12}:${minutes} ${ampm}`;
+    setFormData(prev => ({
+      ...prev,
+      repeatDays: newRepeatDays
+    }));
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 max-w-md mx-auto">
-      <div className="p-4 border-b border-gray-200">
-        <h3 className="text-lg font-medium text-gray-900">Add New Summary</h3>
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 w-full">
+      <div className="p-6 border-b border-gray-200">
+        <h3 className="text-lg font-medium text-gray-900">Add New Reminder</h3>
       </div>
-      <form onSubmit={handleSubmit} className="p-4 space-y-4">
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -184,30 +210,65 @@ export default function SummaryForm() {
         </div>
 
         <div>
-          <label htmlFor="attachment" className="block text-sm font-medium text-gray-700">
-            Attachment
+          <label className="block text-sm font-medium text-gray-700">
+            Attachments ({formData.attachments.length}/2)
           </label>
-          <input
-            type="file"
-            id="attachment"
-            onChange={handleFileChange}
-            className="mt-1 block w-full text-sm text-gray-500
-              file:mr-4 file:py-1.5 file:px-3
-              file:rounded-md file:border-0
-              file:text-sm file:font-medium
-              file:bg-blue-50 file:text-blue-700
-              hover:file:bg-blue-100"
-          />
+          <div className="mt-1 space-y-2">
+            {formData.attachments.map((file, index) => (
+              <div key={index} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md">
+                <div className="flex items-center space-x-2">
+                  {file.type.startsWith('image/') ? (
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                    </svg>
+                  )}
+                  <span className="text-sm text-gray-600">{file.name}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeAttachment(index)}
+                  className="text-gray-400 hover:text-gray-500"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            ))}
+            {formData.attachments.length < 2 && (
+              <div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept="image/*,.pdf,.doc,.docx"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  <svg className="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Add attachment
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div>
-          <button
-            type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Add Summary
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-full max-w-xs mx-auto block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Add Reminder
+        </button>
       </form>
     </div>
   );

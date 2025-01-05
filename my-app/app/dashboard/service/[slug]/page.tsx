@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { services } from '../../../components/ServiceGrid';
-import SummaryForm from '../../../components/SummaryForm';
+import ReminderForm from '../../../components/ReminderForm';
 import ReminderList from '../../../components/ReminderList';
 import { ReminderProvider } from '../../../contexts/ReminderContext';
 
@@ -38,11 +38,11 @@ export default function ServicePage() {
         <h1 className="text-2xl font-semibold text-gray-900">{service.title}</h1>
       </div>
       
-      {slug === 'text-summarization' && (
+      {slug === 'reminder-tool' && (
         <ReminderProvider>
-          <div className="px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <SummaryForm />
+          <div className="container mx-auto px-8">
+            <div className="grid grid-cols-1 gap-8">
+              <ReminderForm />
               <ReminderList />
             </div>
           </div>

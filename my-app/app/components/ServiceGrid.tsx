@@ -6,50 +6,41 @@ import ServiceCard from './ServiceCard';
 // Sample service data with Lorem Ipsum
 export const services = [
   {
-    title: 'Text Summarization',
+    title: 'Reminder Tool',
     organization: 'AI Tools',
     image: '/course1.jpg',
     level: 'Free',
     type: 'Tool',
     organizationLogo: '/google-logo.png',
-    slug: 'text-summarization'
+    slug: 'reminder-tool'
   },
   {
-    title: 'Code Generator',
+    title: 'Voice Reminder',
     organization: 'Dev Tools',
     image: '/course2.jpg',
     level: 'Premium',
     type: 'Tool',
     organizationLogo: '/umich-logo.png',
-    slug: 'code-generator'
+    slug: 'voice-reminder'
   },
   {
-    title: 'Image Recognition',
+    title: 'Template Sender',
     organization: 'Vision AI',
     image: '/course3.jpg',
     level: 'Free',
-    type: 'API',
+    type: 'Tool',
     organizationLogo: '/vanderbilt-logo.png',
-    slug: 'image-recognition'
+    slug: 'template-sender'
   },
   {
-    title: 'Language Translation',
+    title: 'Prompt Generator',
     organization: 'Language AI',
     image: '/course1.jpg',
     level: 'Free',
-    type: 'API',
-    organizationLogo: '/google-logo.png',
-    slug: 'language-translation'
-  },
-  {
-    title: 'Data Analysis',
-    organization: 'Analytics Tools',
-    image: '/course2.jpg',
-    level: 'Premium',
     type: 'Tool',
-    organizationLogo: '/umich-logo.png',
-    slug: 'data-analysis'
-  },
+    organizationLogo: '/google-logo.png',
+    slug: 'prompt-generator'
+  }
 ] as const;
 
 export default function ServiceGrid() {

@@ -1,6 +1,12 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
+
+export interface Attachment {
+  name: string;
+  type: string;
+  url: string;
+}
 
 export interface Reminder {
   id: string;
@@ -9,16 +15,21 @@ export interface Reminder {
   note: string;
   repeat?: boolean;
   repeatDays?: boolean[];
-  attachments?: {
-    name: string;
-    type: 'image' | 'pdf' | 'other';
-    path: string;
-  }[];
+  attachments?: Attachment[];
+}
+
+interface ReminderInput {
+  date: string;
+  time: string;
+  note: string;
+  repeat?: boolean;
+  repeatDays?: boolean[];
+  attachments?: File[];
 }
 
 interface ReminderContextType {
   reminders: Reminder[];
-  addReminder: (reminder: Omit<Reminder, 'id'>) => void;
+  addReminder: (reminder: ReminderInput) => void;
   deleteReminder: (id: string) => void;
 }
 
@@ -37,12 +48,12 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
         {
           name: 'image_example1.png',
           type: 'image',
-          path: '/image_example1.png'
+          url: '/image_example1.png'
         },
         {
           name: 'attachment_example.pdf',
-          type: 'pdf',
-          path: '/attachment_example.pdf'
+          type: 'file',
+          url: '/attachment_example.pdf'
         }
       ]
     },
@@ -56,16 +67,38 @@ export function ReminderProvider({ children }: { children: React.ReactNode }) {
     }
   ]);
 
-  const addReminder = (reminder: Omit<Reminder, 'id'>) => {
-    const newReminder = {
-      ...reminder,
+  const addReminder = async (reminderData: ReminderInput) => {
+    const { attachments: files, ...rest } = reminderData;
+    let attachments: Attachment[] | undefined;
+
+    if (files && files.length > 0) {
+      attachments = files.map(file => ({
+        name: file.name,
+        type: file.type.startsWith('image/') ? 'image' : 'file',
+        url: URL.createObjectURL(file)
+      }));
+    }
+
+    const newReminder: Reminder = {
+      ...rest,
       id: Date.now().toString(),
+      attachments
     };
+
     setReminders(prev => [...prev, newReminder]);
   };
 
   const deleteReminder = (id: string) => {
-    setReminders(prev => prev.filter(reminder => reminder.id !== id));
+    setReminders(prev => {
+      const reminder = prev.find(r => r.id === id);
+      // Cleanup any object URLs when deleting the reminder
+      if (reminder?.attachments) {
+        reminder.attachments.forEach(attachment => {
+          URL.revokeObjectURL(attachment.url);
+        });
+      }
+      return prev.filter(reminder => reminder.id !== id);
+    });
   };
 
   return (
