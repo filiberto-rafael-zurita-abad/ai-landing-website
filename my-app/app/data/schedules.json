@@ -1,0 +1,26 @@
+{
+  "schedules": [
+    {
+      "id": "schedule1736171582495",
+      "userEmail": "user@example.com",
+      "recipientEmail": "fmasz6@gmail.com",
+      "templateId": "template1",
+      "templateMessage": "Welcome to our service!",
+      "subject": "First Test",
+      "date": "2025-01-06",
+      "time": "09:55",
+      "createdAt": "2025-01-06T13:53:02.495Z"
+    },
+    {
+      "id": "schedule1736171782470",
+      "userEmail": "fmasz6@gmail.com",
+      "recipientEmail": "fmasz6@gmail.com",
+      "templateId": "template2",
+      "templateMessage": "Here are our latest updates...",
+      "subject": "Second Test",
+      "date": "2025-01-06",
+      "time": "09:58",
+      "createdAt": "2025-01-06T13:56:22.471Z"
+    }
+  ]
+}

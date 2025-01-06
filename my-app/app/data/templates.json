@@ -1,0 +1,28 @@
+{
+  "templates": [
+    {
+      "id": "template1",
+      "title": "Welcome Email Test",
+      "message": "Welcome to our service!",
+      "createdAt": "2025-01-06T09:17:03-04:00"
+    },
+    {
+      "id": "template2",
+      "title": "Newsletter",
+      "message": "Here are our latest updates...",
+      "createdAt": "2025-01-06T09:17:03-04:00"
+    },
+    {
+      "id": "template3",
+      "title": "Promotional Offer",
+      "message": "Special offer just for you!",
+      "createdAt": "2025-01-06T09:17:03-04:00"
+    },
+    {
+      "id": "template1736169685676",
+      "title": "Test",
+      "message": "Hello",
+      "createdAt": "2025-01-06T13:21:25.676Z"
+    }
+  ]
+}

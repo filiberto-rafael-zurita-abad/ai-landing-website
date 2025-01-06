@@ -15,15 +15,6 @@ export const services = [
     slug: 'reminder-tool'
   },
   {
-    title: 'Voice Reminder',
-    organization: 'Dev Tools',
-    image: '/course2.jpg',
-    level: 'Premium',
-    type: 'Tool',
-    organizationLogo: '/umich-logo.png',
-    slug: 'voice-reminder'
-  },
-  {
     title: 'Template Sender',
     organization: 'Vision AI',
     image: '/course3.jpg',
@@ -33,13 +24,22 @@ export const services = [
     slug: 'template-sender'
   },
   {
-    title: 'Prompt Generator',
+    title: 'Message Generator',
+    organization: 'Dev Tools',
+    image: '/course2.jpg',
+    level: 'Premium',
+    type: 'Tool',
+    organizationLogo: '/umich-logo.png',
+    slug: 'message-generator'
+  },
+  {
+    title: 'Message Prettifier',
     organization: 'Language AI',
     image: '/course1.jpg',
     level: 'Free',
     type: 'Tool',
     organizationLogo: '/google-logo.png',
-    slug: 'prompt-generator'
+    slug: 'message-prittifier'
   }
 ] as const;
 
