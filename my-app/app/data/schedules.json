@@ -21,6 +21,17 @@
       "date": "2025-01-06",
       "time": "09:58",
       "createdAt": "2025-01-06T13:56:22.471Z"
+    },
+    {
+      "id": "schedule1736258269259",
+      "userEmail": "fmasz6@gmail.com",
+      "recipientEmail": "clubdeltomate@gmail.com",
+      "templateId": "template2",
+      "templateMessage": "Here are our latest updates...",
+      "subject": "",
+      "date": "2025-01-07",
+      "time": "09:58",
+      "createdAt": "2025-01-07T13:57:49.259Z"
     }
   ]
 }
