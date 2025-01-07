@@ -11,6 +11,7 @@ import TemplateCreatorForm from '../../../components/TemplateCreatorForm';
 import TemplateList from '../../../components/TemplateList';
 import { TemplateProvider, Template } from '../../../contexts/TemplateContext';
 import { useState } from 'react';
+import MessageGeneratorSection from '../../../components/containers/MessageGeneratorSection';
 
 export default function ServicePage() {
   const params = useParams();
@@ -59,6 +60,10 @@ export default function ServicePage() {
         <TemplateProvider>
           <TemplateSection />
         </TemplateProvider>
+      )}
+
+      {slug === 'message-generator' && (
+        <MessageGeneratorSection />
       )}
     </div>
   );
