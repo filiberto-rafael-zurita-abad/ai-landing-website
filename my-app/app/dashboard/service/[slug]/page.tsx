@@ -48,9 +48,9 @@ export default function ServicePage() {
       {slug === 'reminder-tool' && (
         <ReminderProvider>
           <div className="container mx-auto px-8">
-            <div className="grid grid-cols-1 gap-8">
-              <ReminderForm />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <ReminderList />
+              <ReminderForm />
             </div>
           </div>
         </ReminderProvider>
