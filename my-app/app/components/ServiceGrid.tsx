@@ -8,7 +8,7 @@ export const services = [
   {
     title: 'Reminder Tool',
     organization: 'AI Tools',
-    image: '/course1.jpg',
+    image: '/ready.jpg',
     level: 'Free',
     type: 'Tool',
     organizationLogo: '/google-logo.png',
@@ -17,7 +17,7 @@ export const services = [
   {
     title: 'Template Sender',
     organization: 'Vision AI',
-    image: '/course3.jpg',
+    image: '/ready.jpg',
     level: 'Free',
     type: 'Tool',
     organizationLogo: '/vanderbilt-logo.png',
@@ -26,7 +26,7 @@ export const services = [
   {
     title: 'Message Generator',
     organization: 'Dev Tools',
-    image: '/course2.jpg',
+    image: '/soon.png',
     level: 'Premium',
     type: 'Tool',
     organizationLogo: '/umich-logo.png',
@@ -35,7 +35,7 @@ export const services = [
   {
     title: 'Message Prettifier',
     organization: 'Language AI',
-    image: '/course1.jpg',
+    image: '/soon.png',
     level: 'Free',
     type: 'Tool',
     organizationLogo: '/google-logo.png',
@@ -44,26 +44,26 @@ export const services = [
   {
     title: 'Symptoms Analyzer',
     organization: 'Health AI',
-    image: '/course2.jpg',
+    image: '/soon.png',
     level: 'Premium',
     type: 'Tool',
     organizationLogo: '/google-logo.png',
     slug: 'symptoms-analyzer'
   },
   {
-    title: 'Websites Market Place',
-    organization: 'Web Dev AI',
-    image: '/course3.jpg',
+    title: 'Websites Marketplace',
+    organization: 'Web AI',
+    image: '/soon.png',
     level: 'Premium',
     type: 'Tool',
-    organizationLogo: '/google-logo.png',
+    organizationLogo: '/vanderbilt-logo.png',
     slug: 'websites-marketplace'
   },
   {
     title: 'Prompt Prettifier',
-    organization: 'AI Tools',
-    image: '/course1.jpg',
-    level: 'Premium',
+    organization: 'Language AI',
+    image: '/soon.png',
+    level: 'Free',
     type: 'Tool',
     organizationLogo: '/google-logo.png',
     slug: 'prompt-prettifier'
@@ -72,6 +72,7 @@ export const services = [
 
 export default function ServiceGrid() {
   const [displayCount, setDisplayCount] = useState(3);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
   const [cardsPerRow, setCardsPerRow] = useState(3);
 
@@ -92,8 +93,18 @@ export default function ServiceGrid() {
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
+  const handleToggleDisplay = () => {
+    if (isExpanded) {
+      setDisplayCount(3);
+      setIsExpanded(false);
+    } else {
+      setDisplayCount(services.length);
+      setIsExpanded(true);
+    }
+  };
+
   const showMoreCount = Math.max(0, services.length - displayCount);
-  const shouldShowButton = displayCount < services.length;
+  const shouldShowButton = displayCount !== services.length || isExpanded;
 
   return (
     <div className="space-y-6">
@@ -110,10 +121,24 @@ export default function ServiceGrid() {
       {shouldShowButton && (
         <div className="flex justify-center">
           <button
-            onClick={() => setDisplayCount(services.length)}
-            className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50"
+            onClick={handleToggleDisplay}
+            className="px-4 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50 flex items-center gap-2"
           >
-            Show {showMoreCount} more
+            {isExpanded ? (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+                Show Less
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+                Show {showMoreCount} more
+              </>
+            )}
           </button>
         </div>
       )}

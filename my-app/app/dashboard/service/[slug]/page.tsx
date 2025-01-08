@@ -16,6 +16,10 @@ import MessagePrettifier from '../../../components/MessagePrettifier';
 import SymptomsAnalyzer from '../../../components/SymptomsAnalyzer';
 import WebsitesMarketplace from '../../../components/WebsitesMarketplace';
 import PromptPrettifier from '../../../components/PromptPrettifier';
+import EmailFormContainer from '../../../components/containers/EmailFormContainer';
+import TemplateCreatorContainer from '../../../components/containers/TemplateCreatorContainer';
+import TemplateListContainer from '../../../components/containers/TemplateListContainer';
+import TemplateSenderSection from '../../../components/containers/TemplateSenderSection';
 
 export default function ServicePage() {
   const params = useParams();
@@ -62,7 +66,7 @@ export default function ServicePage() {
 
       {slug === 'template-sender' && (
         <TemplateProvider>
-          <TemplateSection />
+          <TemplateSenderSection />
         </TemplateProvider>
       )}
 
@@ -85,35 +89,6 @@ export default function ServicePage() {
       {slug === 'prompt-prettifier' && (
         <PromptPrettifier />
       )}
-    </div>
-  );
-}
-
-function TemplateSection() {
-  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
-
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Email Sender</h2>
-          <EmailForm />
-        </div>
-
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">
-            {editingTemplate ? 'Edit Template' : 'Template Creator'}
-          </h2>
-          <TemplateCreatorForm
-            editingTemplate={editingTemplate}
-            onFinishEdit={() => setEditingTemplate(null)}
-          />
-        </div>
-      </div>
-      
-      <div className="max-w-4xl mx-auto">
-        <TemplateList onEdit={setEditingTemplate} />
-      </div>
     </div>
   );
 }

@@ -1,28 +1,48 @@
 {
   "templates": [
     {
-      "id": "template1",
+      "id": "template1736169685676",
+      "userId": "user123",
+      "userEmail": "user@example.com",
       "title": "Welcome Email Test",
       "message": "Welcome to our service!",
-      "createdAt": "2025-01-06T09:17:03-04:00"
+      "category": "welcome",
+      "tags": ["welcome", "onboarding"],
+      "metadata": {
+        "language": "en",
+        "version": 1,
+        "isActive": true
+      },
+      "usage": {
+        "timesUsed": 5,
+        "lastUsed": "2025-01-08T12:17:18Z"
+      },
+      "createdAt": "2025-01-06T13:21:25.676Z",
+      "updatedAt": "2025-01-08T12:17:18Z",
+      "createdBy": "user@example.com",
+      "lastModifiedBy": "user@example.com"
     },
     {
-      "id": "template2",
-      "title": "Newsletter",
+      "id": "template1736171582495",
+      "userId": "user456",
+      "userEmail": "fmasz6@gmail.com",
+      "title": "Newsletter Template",
       "message": "Here are our latest updates...",
-      "createdAt": "2025-01-06T09:17:03-04:00"
-    },
-    {
-      "id": "template3",
-      "title": "Promotional Offer",
-      "message": "Special offer just for you!",
-      "createdAt": "2025-01-06T09:17:03-04:00"
-    },
-    {
-      "id": "template1736169685676",
-      "title": "Test",
-      "message": "Hello",
-      "createdAt": "2025-01-06T13:21:25.676Z"
+      "category": "newsletter",
+      "tags": ["newsletter", "updates"],
+      "metadata": {
+        "language": "en",
+        "version": 1,
+        "isActive": true
+      },
+      "usage": {
+        "timesUsed": 2,
+        "lastUsed": "2025-01-07T15:30:00Z"
+      },
+      "createdAt": "2025-01-06T13:53:02.495Z",
+      "updatedAt": "2025-01-07T15:30:00Z",
+      "createdBy": "fmasz6@gmail.com",
+      "lastModifiedBy": "fmasz6@gmail.com"
     }
   ]
 }
