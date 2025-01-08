@@ -26,7 +26,7 @@ export const services = [
   {
     title: 'Message Generator',
     organization: 'Dev Tools',
-    image: '/soon.png',
+    image: '/ready.jpg',
     level: 'Premium',
     type: 'Tool',
     organizationLogo: '/umich-logo.png',

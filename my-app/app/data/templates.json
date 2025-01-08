@@ -7,7 +7,10 @@
       "title": "Welcome Email Test",
       "message": "Welcome to our service!",
       "category": "welcome",
-      "tags": ["welcome", "onboarding"],
+      "tags": [
+        "welcome",
+        "onboarding"
+      ],
       "metadata": {
         "language": "en",
         "version": 1,
@@ -29,7 +32,10 @@
       "title": "Newsletter Template",
       "message": "Here are our latest updates...",
       "category": "newsletter",
-      "tags": ["newsletter", "updates"],
+      "tags": [
+        "newsletter",
+        "updates"
+      ],
       "metadata": {
         "language": "en",
         "version": 1,
@@ -43,6 +49,12 @@
       "updatedAt": "2025-01-07T15:30:00Z",
       "createdBy": "fmasz6@gmail.com",
       "lastModifiedBy": "fmasz6@gmail.com"
+    },
+    {
+      "id": "template1736361774796",
+      "title": "Example Template",
+      "message": "This is an example",
+      "createdAt": "2025-01-08T18:42:54.796Z"
     }
   ]
 }

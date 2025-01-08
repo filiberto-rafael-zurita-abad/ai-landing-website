@@ -1,5 +1,18 @@
 import { NextResponse } from 'next/server';
-import { readSchedulesFile, writeSchedulesFile, EmailSchedule } from '../../utils/scheduleOperations';
+import { db } from '../../lib/db';
+import { schedules } from '../../../db/schema';
+import { eq } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid';
+
+export async function GET() {
+  try {
+    const allSchedules = await db.select().from(schedules);
+    return NextResponse.json(allSchedules);
+  } catch (error) {
+    console.error('Error fetching schedules:', error);
+    return NextResponse.json({ error: 'Failed to fetch schedules' }, { status: 500 });
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -22,37 +35,68 @@ export async function POST(request: Request) {
       );
     }
 
-    const data = readSchedulesFile();
-
-    const newSchedule: EmailSchedule = {
-      id: `schedule${Date.now()}`,
+    const newSchedule = {
+      id: uuidv4(),
       userEmail,
       recipientEmail,
       templateId: templateType,
       templateMessage: templateMessage || '',
-      subject,
+      subject: subject || '',
       date,
       time,
-      createdAt: new Date().toISOString()
+      createdAt: new Date()
     };
 
-    try {
-      data.schedules.push(newSchedule);
-      writeSchedulesFile(data);
-    } catch (e) {
-      console.error('Error writing to schedules file:', e);
-      return NextResponse.json(
-        { error: 'Failed to save schedule' },
-        { status: 500 }
-      );
+    const [createdSchedule] = await db.insert(schedules).values(newSchedule).returning();
+    return NextResponse.json(createdSchedule);
+  } catch (error) {
+    console.error('Error creating schedule:', error);
+    return NextResponse.json({ error: 'Failed to create schedule' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { id } = await request.json();
+    const [deletedSchedule] = await db
+      .delete(schedules)
+      .where(eq(schedules.id, id))
+      .returning();
+
+    if (!deletedSchedule) {
+      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
     }
 
-    return NextResponse.json(newSchedule);
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error in POST /api/schedules:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    console.error('Error deleting schedule:', error);
+    return NextResponse.json({ error: 'Failed to delete schedule' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const schedule = await request.json();
+    const [updatedSchedule] = await db
+      .update(schedules)
+      .set({
+        recipientEmail: schedule.recipientEmail,
+        templateId: schedule.templateId,
+        templateMessage: schedule.templateMessage,
+        subject: schedule.subject,
+        date: schedule.date,
+        time: schedule.time,
+      })
+      .where(eq(schedules.id, schedule.id))
+      .returning();
+
+    if (!updatedSchedule) {
+      return NextResponse.json({ error: 'Schedule not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(updatedSchedule);
+  } catch (error) {
+    console.error('Error updating schedule:', error);
+    return NextResponse.json({ error: 'Failed to update schedule' }, { status: 500 });
   }
 }
