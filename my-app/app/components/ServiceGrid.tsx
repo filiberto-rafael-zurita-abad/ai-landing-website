@@ -39,7 +39,34 @@ export const services = [
     level: 'Free',
     type: 'Tool',
     organizationLogo: '/google-logo.png',
-    slug: 'message-prittifier'
+    slug: 'message-prettifier'
+  },
+  {
+    title: 'Symptoms Analyzer',
+    organization: 'Health AI',
+    image: '/course2.jpg',
+    level: 'Premium',
+    type: 'Tool',
+    organizationLogo: '/google-logo.png',
+    slug: 'symptoms-analyzer'
+  },
+  {
+    title: 'Websites Market Place',
+    organization: 'Web Dev AI',
+    image: '/course3.jpg',
+    level: 'Premium',
+    type: 'Tool',
+    organizationLogo: '/google-logo.png',
+    slug: 'websites-marketplace'
+  },
+  {
+    title: 'Prompt Prettifier',
+    organization: 'AI Tools',
+    image: '/course1.jpg',
+    level: 'Premium',
+    type: 'Tool',
+    organizationLogo: '/google-logo.png',
+    slug: 'prompt-prettifier'
   }
 ] as const;
 

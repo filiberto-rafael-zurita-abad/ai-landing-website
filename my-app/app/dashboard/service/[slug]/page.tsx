@@ -12,6 +12,10 @@ import TemplateList from '../../../components/TemplateList';
 import { TemplateProvider, Template } from '../../../contexts/TemplateContext';
 import { useState } from 'react';
 import MessageGeneratorSection from '../../../components/containers/MessageGeneratorSection';
+import MessagePrettifier from '../../../components/MessagePrettifier';
+import SymptomsAnalyzer from '../../../components/SymptomsAnalyzer';
+import WebsitesMarketplace from '../../../components/WebsitesMarketplace';
+import PromptPrettifier from '../../../components/PromptPrettifier';
 
 export default function ServicePage() {
   const params = useParams();
@@ -64,6 +68,22 @@ export default function ServicePage() {
 
       {slug === 'message-generator' && (
         <MessageGeneratorSection />
+      )}
+
+      {slug === 'message-prettifier' && (
+        <MessagePrettifier />
+      )}
+
+      {slug === 'symptoms-analyzer' && (
+        <SymptomsAnalyzer />
+      )}
+
+      {slug === 'websites-marketplace' && (
+        <WebsitesMarketplace />
+      )}
+
+      {slug === 'prompt-prettifier' && (
+        <PromptPrettifier />
       )}
     </div>
   );
