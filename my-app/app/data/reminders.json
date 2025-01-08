@@ -1,0 +1,46 @@
+[
+  {
+    "id": "d60e5c9f-9d82-42ee-b82d-cd5480bd701c",
+    "date": "2025-01-08",
+    "time": "23:30",
+    "note": "001",
+    "repeat": false,
+    "repeatDays": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "attachments": [],
+    "userEmail": "fmasz6@gmail.com",
+    "createdAt": "2025-01-08T03:22:52.670Z"
+  },
+  {
+    "id": "cb271481-98c3-469f-9385-47ffabd2d76e",
+    "date": "2025-01-09",
+    "time": "22:45",
+    "note": "002",
+    "repeat": false,
+    "repeatDays": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "attachments": [
+      {
+        "name": "images.jfif",
+        "type": "image",
+        "url": "blob:http://localhost:3000/037084e4-d531-4754-8fc0-7f76fd6aeb50"
+      }
+    ],
+    "userEmail": "fmasz6@gmail.com",
+    "createdAt": "2025-01-08T03:23:10.903Z"
+  }
+]

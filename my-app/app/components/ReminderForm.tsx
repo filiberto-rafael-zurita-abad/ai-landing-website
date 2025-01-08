@@ -58,29 +58,23 @@ export default function ReminderForm() {
       return;
     }
 
-    const newFormData = {
-      ...formData,
-      date: selectedDateTime.toISOString().split('T')[0],
-      time: selectedDateTime.toTimeString().slice(0, 5)
-    };
+    try {
+      await addReminder({
+        date: selectedDateTime.toISOString().split('T')[0],
+        time: selectedDateTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
+        note: formData.note,
+        repeat: formData.repeat,
+        repeatDays: formData.repeatDays,
+        attachments: formData.attachments
+      });
 
-    await addReminder({
-      date: newFormData.date,
-      time: newFormData.time,
-      note: formData.note,
-      repeat: formData.repeat,
-      repeatDays: formData.repeat ? formData.repeatDays : undefined,
-      attachments: formData.attachments.length > 0 ? formData.attachments : undefined
-    });
-
-    setFormData(initialFormState);
-    setSelectedDateTime(null);
-    const now = new Date();
-    if (selectedDateTime < now) {
-      toast.error('Cannot set reminders for past dates/times');
-      return;
+      toast.success('Reminder saved successfully!');
+      setFormData(initialFormState);
+      setSelectedDateTime(null);
+    } catch (error) {
+      toast.error('Failed to save reminder. Please try again.');
+      console.error('Error saving reminder:', error);
     }
-    toast.success('Reminder added successfully!');
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,7 +218,7 @@ export default function ReminderForm() {
                       </svg>
                     ) : (
                       <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                        <path d="M4 4a2 2 0 012-2h4.586a2 2 0 011.707 1.707L6.414 9H9a2 2 0 018.485 1.4L14.5 6.646a2 2 0 01.303 1.646z" />
                       </svg>
                     )}
                     <span className="text-sm text-gray-600 font-medium">{file.name}</span>

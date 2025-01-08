@@ -1,23 +1,17 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getStoredReminders, storeReminders, StoredReminder } from '../utils/reminderStorage';
+import { getReminders, saveReminder, deleteReminder as deleteReminderFromFile, ReminderData } from '../utils/reminderUtils';
+import { useUser } from '@clerk/nextjs';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface Attachment {
   name: string;
-  type: string;
+  type: 'image' | 'pdf' | 'other';
   url: string;
 }
 
-export interface Reminder {
-  id: string;
-  date: string;
-  time: string;
-  note: string;
-  repeat?: boolean;
-  repeatDays?: boolean[];
-  attachments?: Attachment[];
-}
+export interface Reminder extends ReminderData {}
 
 interface ReminderInput {
   date: string;
@@ -30,100 +24,65 @@ interface ReminderInput {
 
 interface ReminderContextType {
   reminders: Reminder[];
-  addReminder: (reminder: ReminderInput) => void;
-  deleteReminder: (id: string) => void;
+  addReminder: (reminder: ReminderInput) => Promise<void>;
+  deleteReminder: (id: string) => Promise<void>;
 }
-
-const defaultReminders: Reminder[] = [
-  {
-    id: '1',
-    date: '2025-01-05',
-    time: '09:30',
-    note: 'Review quarterly sales report',
-    repeat: true,
-    repeatDays: [true, true, false, true, false, true, false],
-    attachments: [
-      {
-        name: 'image_example1.png',
-        type: 'image',
-        url: '/image_example1.png'
-      },
-      {
-        name: 'attachment_example.pdf',
-        type: 'file',
-        url: '/attachment_example.pdf'
-      }
-    ]
-  },
-  {
-    id: '2',
-    date: '2025-01-06',
-    time: '14:00',
-    note: 'Team meeting - Project updates',
-    repeat: false,
-    repeatDays: [false, false, false, false, false, false, false],
-  }
-];
 
 const ReminderContext = createContext<ReminderContextType | undefined>(undefined);
 
 export function ReminderProvider({ children }: { children: React.ReactNode }) {
   const [reminders, setReminders] = useState<Reminder[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const { user } = useUser();
 
-  // Initialize reminders from localStorage or defaults
   useEffect(() => {
-    const storedReminders = getStoredReminders();
-    if (storedReminders.length > 0) {
-      setReminders(storedReminders);
-    } else {
-      setReminders(defaultReminders);
-      storeReminders(defaultReminders);
+    const loadReminders = async () => {
+      const allReminders = await getReminders();
+      // Filter reminders for the current user
+      const userReminders = allReminders.filter(r => r.userEmail === user?.emailAddresses[0]?.emailAddress);
+      setReminders(userReminders);
+    };
+    
+    if (user?.emailAddresses[0]?.emailAddress) {
+      loadReminders();
     }
-    setIsInitialized(true);
-  }, []);
+  }, [user?.emailAddresses]);
 
-  // Update localStorage whenever reminders change
-  useEffect(() => {
-    if (isInitialized) {
-      storeReminders(reminders);
-    }
-  }, [reminders, isInitialized]);
-
-  const addReminder = async (reminderData: ReminderInput) => {
-    const { attachments: files, ...rest } = reminderData;
-    let attachments: Attachment[] | undefined;
-
-    if (files && files.length > 0) {
-      attachments = files.map(file => ({
-        name: file.name,
-        type: file.type.startsWith('image/') ? 'image' : 'file',
-        url: URL.createObjectURL(file)
-      }));
+  const addReminder = async (reminderInput: ReminderInput) => {
+    if (!user?.emailAddresses[0]?.emailAddress) {
+      throw new Error('User must be logged in to add reminders');
     }
 
-    const newReminder: Reminder = {
-      ...rest,
-      id: Date.now().toString(),
-      attachments
+    const attachments: Attachment[] = reminderInput.attachments 
+      ? reminderInput.attachments.map(file => ({
+          name: file.name,
+          type: file.type.startsWith('image/') ? 'image' : 'other',
+          url: URL.createObjectURL(file)
+        }))
+      : [];
+
+    const newReminder: ReminderData = {
+      id: uuidv4(),
+      date: reminderInput.date,
+      time: reminderInput.time,
+      note: reminderInput.note,
+      repeat: reminderInput.repeat,
+      repeatDays: reminderInput.repeatDays,
+      attachments,
+      userEmail: user.emailAddresses[0].emailAddress,
+      createdAt: new Date().toISOString()
     };
 
-    setReminders(prev => [...prev, newReminder]);
+    const success = await saveReminder(newReminder);
+    if (success) {
+      setReminders(prev => [...prev, newReminder]);
+    }
   };
 
-  const deleteReminder = (id: string) => {
-    setReminders(prev => {
-      const reminder = prev.find(r => r.id === id);
-      // Cleanup any object URLs when deleting the reminder
-      if (reminder?.attachments) {
-        reminder.attachments.forEach(attachment => {
-          if (attachment.url.startsWith('blob:')) {
-            URL.revokeObjectURL(attachment.url);
-          }
-        });
-      }
-      return prev.filter(reminder => reminder.id !== id);
-    });
+  const deleteReminder = async (id: string) => {
+    const success = await deleteReminderFromFile(id);
+    if (success) {
+      setReminders(prev => prev.filter(reminder => reminder.id !== id));
+    }
   };
 
   return (

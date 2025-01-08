@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useReminders } from '../contexts/ReminderContext';
+import { toast } from 'react-hot-toast';
 
 const DAYS = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
 
@@ -17,16 +18,39 @@ interface Reminder {
     type: 'image' | 'pdf' | 'other';
     url: string;
   }[];
+  createdAt: string;
+  userEmail: string;
 }
 
 export default function ReminderList() {
   const { reminders, deleteReminder } = useReminders();
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteReminder(id);
+      toast.success('Reminder deleted successfully!');
+    } catch (error) {
+      toast.error('Failed to delete reminder. Please try again.');
+      console.error('Error deleting reminder:', error);
+    }
+  };
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
+    });
+  };
+
+  const formatCreatedAt = (dateStr: string) => {
+    return new Date(dateStr).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
     });
   };
 
@@ -59,67 +83,22 @@ export default function ReminderList() {
                     </span>
                     {reminder.repeat && (
                       <span className="text-xs text-gray-400">
-                        repeat on
+                        (Repeats: {reminder.repeatDays?.map((day, i) => day ? DAYS[i] : '').filter(Boolean).join(', ')})
                       </span>
                     )}
                   </div>
-                  {reminder.repeat && reminder.repeatDays && (
-                    <div className="flex gap-1 mt-1">
-                      {DAYS.map((day, index) => (
-                        <span
-                          key={day}
-                          className={`text-xs px-1.5 py-0.5 rounded ${
-                            reminder.repeatDays![index]
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'text-gray-400'
-                          }`}
-                        >
-                          {day}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  <p className="mt-1 text-sm text-gray-600 break-words whitespace-pre-wrap">{reminder.note}</p>
-                  {reminder.attachments && reminder.attachments.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {reminder.attachments.map((attachment, index) => (
-                        <div key={index} className="flex items-center space-x-1">
-                          {attachment.type === 'image' ? (
-                            <div className="relative w-8 h-8">
-                              <Image
-                                src={attachment.url}
-                                alt="Attachment preview"
-                                fill
-                                className="object-cover rounded"
-                              />
-                            </div>
-                          ) : (
-                            <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
-                            </svg>
-                          )}
-                          <span className="text-xs text-gray-500">{attachment.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <p className="mt-1 text-sm text-gray-600">{reminder.note}</p>
+                  <div className="mt-1 text-xs text-gray-400">
+                    <p>Created: {formatCreatedAt(reminder.createdAt)}</p>
+                    <p>By: {reminder.userEmail}</p>
+                  </div>
                 </div>
                 <button
-                  onClick={() => deleteReminder(reminder.id)}
-                  className="ml-4 text-gray-400 hover:text-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-full p-1"
+                  onClick={() => handleDelete(reminder.id)}
+                  className="ml-4 text-red-600 hover:text-red-800"
                 >
-                  <svg 
-                    className="w-5 h-5" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" 
-                    />
+                  <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                   </svg>
                 </button>
               </div>
