@@ -39,13 +39,33 @@ export default function MessageGeneratorSection() {
     }
 
     setIsGenerating(true);
-    // API call will be implemented later
-    // Here we'll pass the savedPrompt (not the unsaved customPrompt)
-    // along with the message and settings to guide the AI's response generation
-    setTimeout(() => {
-      setGeneratedResponse("Hi! Thanks for your interest. Our basic plan starts at $29/mo and includes all core features. Would you like me to set up a quick demo call?");
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message,
+          settings,
+          prompt: savedPrompt,
+        }),
+        credentials: 'include', // Important for auth
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate response');
+      }
+
+      const data = await response.json();
+      setGeneratedResponse(data.response);
+    } catch (error: any) {
+      console.error('Error:', error);
+      alert(error.message || 'Failed to generate response. Please try again.');
+    } finally {
       setIsGenerating(false);
-    }, 1000);
+    }
   };
 
   const handleRegenerate = () => {
