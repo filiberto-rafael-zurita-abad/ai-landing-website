@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
 const REMINDERS_FILE = path.join(process.cwd(), 'app/data/reminders.json');
 
 export async function DELETE(
-  request: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
-) {
+): Promise<NextResponse> {
   try {
     const data = await fs.readFile(REMINDERS_FILE, 'utf8');
     const reminders = JSON.parse(data);

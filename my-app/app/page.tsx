@@ -7,10 +7,12 @@ import { Integrations } from './containers/Integrations';
 import { FAQ } from './containers/FAQ';
 import { CTA } from './containers/CTA';
 import { Footer } from './containers/Footer';
+import { AuthRedirect } from './components/AuthRedirect';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <AuthRedirect />
       <Navigation />
       <main>
         <Hero />
