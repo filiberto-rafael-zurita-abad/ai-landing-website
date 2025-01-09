@@ -15,7 +15,7 @@ export const CTA = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
-              href="/signup" 
+              href="/sign-up" 
               className="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
             >
               Get Started for Free

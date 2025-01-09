@@ -1,5 +1,5 @@
 import Sidebar from '../../../components/Sidebar';
-import { UserButton } from "@clerk/nextjs";
+import DashboardHeader from '@/app/components/DashboardHeader';
 
 export default function ServiceLayout({
   children,
@@ -11,13 +11,7 @@ export default function ServiceLayout({
       <Sidebar />
       
       <div className="flex-1">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 className="text-2xl font-semibold text-gray-900">Service Details</h1>
-            <UserButton afterSignOutUrl="/" />
-          </div>
-        </header>
-        
+        <DashboardHeader title="Service Details" />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {children}
         </main>

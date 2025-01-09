@@ -26,7 +26,7 @@ export default function RootLayout({
   const inter = `${geistSans.variable} ${geistMono.variable} antialiased`;
   
   return (
-    <ClerkProvider>
+    <ClerkProvider afterSignOutUrl="/">
       <html lang="en">
         <body className={inter}>{children}</body>
       </html>
