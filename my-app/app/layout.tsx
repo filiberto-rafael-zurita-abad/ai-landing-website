@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Schedulify - Smart Scheduling Made Simple",
-  description: "Schedule meetings effortlessly with Schedulify's smart scheduling platform.",
+  title: "CS042labs - Smart Scheduling Made Simple",
+  description: "Schedule meetings effortlessly with CS042labs's smart scheduling platform.",
 };
 
 export default function RootLayout({

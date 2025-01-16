@@ -14,32 +14,30 @@ export const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-blue-600">Schedulify</Link>
+            <Link href="/" className="text-2xl font-bold text-blue-600">CS042labs</Link>
           </div>
           <div className="hidden md:flex items-center space-x-8">
             {isHomePage ? (
               <>
-                <ScrollLink href="#features" className="text-gray-600 hover:text-blue-600 transition-colors">Features</ScrollLink>
-                <ScrollLink href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors">Pricing</ScrollLink>
-                <ScrollLink href="#about" className="text-gray-600 hover:text-blue-600 transition-colors">About</ScrollLink>
+                <ScrollLink href="#competitions" className="text-gray-600 hover:text-blue-600 transition-colors">Competitions</ScrollLink>
+                <ScrollLink href="#faqs" className="text-gray-600 hover:text-blue-600 transition-colors">FAQs</ScrollLink>
               </>
             ) : (
               <>
-                <Link href="/#features" className="text-gray-600 hover:text-blue-600 transition-colors">Features</Link>
-                <Link href="/#pricing" className="text-gray-600 hover:text-blue-600 transition-colors">Pricing</Link>
-                <Link href="/#about" className="text-gray-600 hover:text-blue-600 transition-colors">About</Link>
+                <Link href="/#competitions" className="text-gray-600 hover:text-blue-600 transition-colors">Competitions</Link>
+                <Link href="/#faqs" className="text-gray-600 hover:text-blue-600 transition-colors">FAQs</Link>
               </>
             )}
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
             <SignedOut>
-              <Link href="/sign-in" className="text-gray-600 hover:text-blue-600 transition-colors">
+              {/* <Link href="/sign-in" className="text-gray-600 hover:text-blue-600 transition-colors">
                 Sign In
               </Link>
               <Link href="/sign-up" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Get Started
-              </Link>
+              </Link> */}
             </SignedOut>
           </div>
         </div>

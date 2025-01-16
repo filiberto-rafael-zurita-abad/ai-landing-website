@@ -3,20 +3,20 @@
 const steps = [
   {
     step: 1,
-    title: "Set Your Availability",
-    description: "Define your working hours and buffer times between meetings. Sync with your existing calendars to avoid double-booking.",
+    title: "Complete Before Deadline",
+    description: "Ensure your AI solution is fully developed and submitted before the competition deadline to be eligible for prizes.",
     icon: "📅"
   },
   {
     step: 2,
-    title: "Share Your Link",
-    description: "Share your personalized booking link with clients and colleagues. They'll see your availability in their time zone.",
+    title: "Share Solution Links",
+    description: "Provide links to your AI solution's code repository, demo, and documentation for the judges to review.",
     icon: "🔗"
   },
   {
     step: 3,
-    title: "Get Booked",
-    description: "Receive confirmations and reminders automatically. Join meetings with one click through integrated video conferencing.",
+    title: "Win Cash Prize",
+    description: "Top solutions will be awarded cash prizes and recognition for their innovative AI implementations.",
     icon: "✅"
   }
 ];
@@ -26,8 +26,8 @@ export const About = () => {
     <div id="about" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">How Schedulify Works</h2>
-          <p className="text-xl text-gray-600">Three simple steps to streamline your scheduling process</p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">How The Autonomous AI Hackathon Works</h2>
+          <p className="text-xl text-gray-600">Three simple steps to make your submission</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {steps.map((item) => (

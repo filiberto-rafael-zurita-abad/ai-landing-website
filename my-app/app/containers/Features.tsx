@@ -11,8 +11,8 @@ export const Features = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-4">Smart Scheduling</h3>
-            <p className="text-gray-600">Automatically detect time zones and suggest the perfect meeting slots.</p>
+            <h3 className="text-xl font-semibold mb-4">Frequent Competitions</h3>
+            <p className="text-gray-600">Regular AI hackathons to challenge your skills and push innovation boundaries.</p>
           </div>
           <div className="text-center">
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -21,7 +21,7 @@ export const Features = () => {
               </svg>
             </div>
             <h3 className="text-xl font-semibold mb-4">Team Collaboration</h3>
-            <p className="text-gray-600">Coordinate with your team and manage group availability seamlessly.</p>
+            <p className="text-gray-600">Build and manage teams to create innovative AI solutions and make submissions.</p>
           </div>
           <div className="text-center">
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -29,8 +29,8 @@ export const Features = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold mb-4">Calendar Integration</h3>
-            <p className="text-gray-600">Sync with Google Calendar, Outlook, and other popular calendar apps.</p>
+            <h3 className="text-xl font-semibold mb-4">Responsible Criteria</h3>
+            <p className="text-gray-600">We use fair and responsible judging criteria to select competition winners.</p>
           </div>
         </div>
       </div>
