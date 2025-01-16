@@ -1,8 +1,11 @@
 'use client';
 
+'use client';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HomeIcon, ChartBarIcon, FolderIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ChartBarIcon, FolderIcon, CalendarIcon, Bars3Icon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 const navigation = [
   { name: 'Overview', href: '/dashboard', icon: HomeIcon },
@@ -13,10 +16,17 @@ const navigation = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex flex-col w-64 bg-gray-800">
-      <div className="flex flex-col flex-1 min-h-0">
+    <div className="md:flex md:flex-col md:w-64 md:bg-gray-800">
+      <button
+        className="md:hidden p-2 bg-gray-800 text-white"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <Bars3Icon className="h-6 w-6" />
+      </button>
+      <div className={`flex flex-col flex-1 min-h-0 ${isOpen ? 'block' : 'hidden'} md:block`}>
         <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
           <div className="flex-1 px-3 space-y-1">
             {navigation.map((item) => {
