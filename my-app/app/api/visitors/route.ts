@@ -1,9 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server'
-import fs from 'fs'
-import path from 'path'
-
-const visitorsDir = path.join(process.cwd(), 'data/visitors')
-const visitorsFile = path.join(visitorsDir, 'visitors.json')
+import { query } from '@/lib/db'
 
 export interface Visitor {
   id: number
@@ -17,18 +13,6 @@ export interface Visitor {
 
 export async function GET(request: NextRequest) {
   try {
-    // Create visitors directory if it doesn't exist
-    if (!fs.existsSync(visitorsDir)) {
-      fs.mkdirSync(visitorsDir, { recursive: true })
-    }
-
-    // Get existing visitors
-    let visitors: Visitor[] = []
-    if (fs.existsSync(visitorsFile)) {
-      const fileData = fs.readFileSync(visitorsFile, 'utf8')
-      visitors = JSON.parse(fileData)
-    }
-
     // Get visitor info
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
                request.headers.get('x-real-ip')
@@ -46,33 +30,33 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Calculate next ID
-    const nextId = visitors.length > 0 ? 
-      Math.max(...visitors.map(v => v.id)) + 1 : 1
-
     // Check if visitor exists
-    const existingVisitor = visitors.find(v => v.ipAddress === ip)
-    
-    if (existingVisitor) {
+    const existingVisitor = await query(
+      'SELECT * FROM visitors WHERE ipAddress = $1',
+      [ip]
+    )
+
+    if (existingVisitor.rows.length > 0) {
       // Update existing visitor
-      existingVisitor.visitCount += 1
-      existingVisitor.lastVisit = new Date().toISOString()
+      await query(
+        'UPDATE visitors SET visitCount = visitCount + 1, lastVisit = $1 WHERE ipAddress = $2',
+        [new Date().toISOString(), ip]
+      )
     } else {
       // Add new visitor
-      const newVisitor: Visitor = {
-        id: nextId,
-        ipAddress: ip || 'Unknown',
-        country,
-        userAgent: userAgent || 'Unknown',
-        timestamp: new Date().toISOString(),
-        visitCount: 1,
-        lastVisit: new Date().toISOString()
-      }
-      visitors.push(newVisitor)
+      await query(
+        `INSERT INTO visitors (ipAddress, country, userAgent, timestamp, visitCount, lastVisit)
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [
+          ip || 'Unknown',
+          country,
+          userAgent || 'Unknown',
+          new Date().toISOString(),
+          1,
+          new Date().toISOString()
+        ]
+      )
     }
-
-    // Save updated visitors
-    fs.writeFileSync(visitorsFile, JSON.stringify(visitors, null, 2))
 
     return NextResponse.json({ success: true })
   } catch (error) {

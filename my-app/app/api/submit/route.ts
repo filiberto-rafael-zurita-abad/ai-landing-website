@@ -1,9 +1,5 @@
-import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
-
-const submissionsDir = path.join(process.cwd(), 'data/submissions')
-const submissionsFile = path.join(submissionsDir, 'submissions.json')
+import { NextResponse, NextRequest } from 'next/server'
+import { query, createSubmissionsTable, createVisitorsTable } from '@/lib/db'
 
 export interface Submission {
   id: number
@@ -22,34 +18,29 @@ export async function POST(request: Request) {
   try {
     const data = await request.json()
     
-    // Create submissions directory if it doesn't exist
-    if (!fs.existsSync(submissionsDir)) {
-      fs.mkdirSync(submissionsDir, { recursive: true })
-    }
+    // Create tables if they don't exist
+    await createSubmissionsTable()
+    await createVisitorsTable()
 
-    // Get existing submissions
-    let submissions: Submission[] = []
-    if (fs.existsSync(submissionsFile)) {
-      const fileData = fs.readFileSync(submissionsFile, 'utf8')
-      submissions = JSON.parse(fileData)
-    }
+    // Insert new submission into database
+    const result = await query(
+      `INSERT INTO submissions (nickname, email, description, github, youtube, submissionNumber, ipAddress, userAgent, timestamp)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       RETURNING id`,
+      [
+        data.nickname,
+        data.email,
+        data.description,
+        data.github,
+        data.youtube,
+        data.submissionNumber,
+        data.ipAddress,
+        data.userAgent,
+        new Date().toISOString()
+      ]
+    )
 
-    // Calculate next ID
-    const nextId = submissions.length > 0 ? 
-      Math.max(...submissions.map(s => s.id)) + 1 : 1
-
-    // Add new submission
-    const newSubmission: Submission = {
-      id: nextId,
-      ...data,
-      timestamp: new Date().toISOString()
-    }
-    submissions.push(newSubmission)
-
-    // Save updated submissions
-    fs.writeFileSync(submissionsFile, JSON.stringify(submissions, null, 2))
-
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, id: result.rows[0].id })
   } catch (error) {
     console.error('Error saving submission:', error)
     return NextResponse.json(
