@@ -1,10 +1,14 @@
 [
   {
+    "id": 1,
     "nickname": "fmasz6",
     "email": "fmasz6@gmail.com",
-    "description": "my first description ",
+    "description": "Hello world",
     "github": "",
     "youtube": "",
-    "submittedAt": "2025-01-16T20:51:08.290Z"
+    "submissionNumber": 1,
+    "ipAddress": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0",
+    "timestamp": "2025-01-17T02:34:40.308Z"
   }
 ]

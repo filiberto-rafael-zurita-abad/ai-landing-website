@@ -4,7 +4,7 @@ export const Competition = () => {
   return (
     <section className="py-20 bg-white relative">
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-50"
+        className="absolute inset-0 bg-cover bg-center opacity-50 z-0"
         style={{ backgroundImage: "url('/image-2.png')" }}
       ></div>
       <div className="container mx-auto px-4 relative z-10">
@@ -17,7 +17,7 @@ export const Competition = () => {
               Deadline: January 25, 2024 11:59 PM EST
             </p>
             <p className="text-blue-600 font-semibold">
-              Total Prize: $25
+              Total Prize: $20
             </p>
             <p>
               Build a customizable AI Driven solution that scrapes and organizes data about:
@@ -79,8 +79,6 @@ export const Competition = () => {
               <li>❌ No use of blackhat techniques or illegal methods</li>
             </ul>
           </div>
-
-          
         </div>
       </div>
     </section>

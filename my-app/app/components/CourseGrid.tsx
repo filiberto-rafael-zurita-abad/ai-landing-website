@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import CourseCard from './CourseCard';
 
 // Sample course data with Lorem Ipsum
@@ -54,25 +54,6 @@ export const courses = [
 
 export default function CourseGrid() {
   const [displayCount, setDisplayCount] = useState(3);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [cardsPerRow, setCardsPerRow] = useState(3);
-
-  useEffect(() => {
-    const updateWidth = () => {
-      const container = document.getElementById('course-grid');
-      if (container) {
-        setContainerWidth(container.offsetWidth);
-        // Calculate cards per row based on container width
-        // Assuming each card is ~320px wide with margins
-        const possibleCards = Math.floor(container.offsetWidth / 320);
-        setCardsPerRow(Math.max(1, possibleCards));
-      }
-    };
-
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []);
 
   const showMoreCount = Math.max(0, courses.length - displayCount);
   const shouldShowButton = displayCount < courses.length;

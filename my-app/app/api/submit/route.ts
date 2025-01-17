@@ -6,12 +6,16 @@ const submissionsDir = path.join(process.cwd(), 'data/submissions')
 const submissionsFile = path.join(submissionsDir, 'submissions.json')
 
 export interface Submission {
+  id: number
   nickname: string
   email: string
   description: string
   github?: string
   youtube?: string
-  submittedAt: string
+  submissionNumber: number
+  ipAddress?: string
+  userAgent?: string
+  timestamp: string
 }
 
 export async function POST(request: Request) {
@@ -30,10 +34,15 @@ export async function POST(request: Request) {
       submissions = JSON.parse(fileData)
     }
 
+    // Calculate next ID
+    const nextId = submissions.length > 0 ? 
+      Math.max(...submissions.map(s => s.id)) + 1 : 1
+
     // Add new submission
     const newSubmission: Submission = {
+      id: nextId,
       ...data,
-      submittedAt: new Date().toISOString()
+      timestamp: new Date().toISOString()
     }
     submissions.push(newSubmission)
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface ServiceCardProps {
   title: string;
@@ -29,18 +30,21 @@ export default function ServiceCard({
       className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
     >
       <div className="relative h-48 w-full">
-        <img
+        <Image
           src={image}
           alt={title}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
         />
       </div>
       <div className="p-4">
         <div className="flex items-center mb-4">
-          <img
+          <Image
             src={organizationLogo}
             alt={organization}
-            className="w-6 h-6 mr-2"
+            width={24}
+            height={24}
+            className="mr-2"
           />
           <span className="text-sm text-gray-600">{organization}</span>
         </div>

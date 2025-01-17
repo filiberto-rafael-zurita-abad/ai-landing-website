@@ -9,6 +9,10 @@ interface FormInput {
   description: string
   github?: string
   youtube?: string
+  submissionNumber?: number
+  ipAddress?: string
+  userAgent?: string
+  timestamp?: string
 }
 
 export function SubmissionForm() {
@@ -17,12 +21,28 @@ export function SubmissionForm() {
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     try {
+      // Get submission count from API
+      const countResponse = await fetch('/api/submissions/count')
+      const { count } = await countResponse.json()
+      
+      // Get client info
+      const ipResponse = await fetch('/api/ip')
+      const { ip } = await ipResponse.json()
+      
+      const submissionData = {
+        ...data,
+        submissionNumber: count + 1,
+        ipAddress: ip,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      }
+
       const response = await fetch('/api/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(submissionData),
       })
 
       if (!response.ok) {
